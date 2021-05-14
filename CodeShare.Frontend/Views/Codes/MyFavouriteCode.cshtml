@@ -1,0 +1,98 @@
+﻿
+@{
+    ViewBag.Title = "Danh sách code đã lưu";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="home" style=" height: 250px">
+    <div class="home_background parallax-window" data-parallax="scroll" style="background-image: url('../../Images/Codes/blue-dark-background-brightness-megaphone-set-windows-web-programming-language-codes-gears-vector-illustration-111990452.jpg');"></div>
+</div>
+<div class="testimonials" style="background-color: #f0f0f0; font-family: Roboto,Arial,sans-serif;padding-top: 22px;" ng-app="myApp">
+    <div class="test_border"></div>
+    <div class="container" style="max-width: 1300px" ng-controller="myCtrl">
+        <div class="row">
+            <div class="col-lg-8 bg-white border shadow text-dark">
+                <div style="padding: 10px; font-size: 16px">
+                    <h3 class="font-weight-bold text-success mt-2" style="color: black"><i class="fa fa-code font-weight-bold"></i> DANH SÁCH CODE ĐÃ LƯU</h3>
+                    <p class="text-dark font-weight-bold float-left mt-3">
+                        <b>Có tổng cộng <b style="color: red">{{count}}</b> code</b> <br />
+                        Có <b style="color: red">{{(list | filter: txtSearch).length}}</b> code được tìm thấy
+                    </p>
+                    <div class="ui float-right mt-3">
+                        <div class="ui icon input">
+                            <input class="prompt" type="text" placeholder="Nhập bất kỳ từ khóa..." ng-model="txtSearch">
+                            <i class="search icon text-white"></i>
+                        </div>
+                        <div class="results"></div>
+                    </div>
+                    <br />
+                    <br />
+                    <br />
+                    <table class="table table-bordered text-center table-hover">
+                        <tr class="bg-dark text-white font-weight-bold">
+                            <td>Mã Code</td>
+                            <td>Ảnh</td>
+                            <td>Tiêu Đề</td>
+                            <td width="90">Lượt Xem</td>
+                            <td width="90">Giá Bán</td>
+                            <td width="150">Số Tiền</td>
+                            <td width="100">Tùy Chọn</td>
+                        </tr>
+                        <tr ng-show="(list | filter: txtSearch).length == 0">
+                            <td colspan="7">
+                                <h4 class="font-weight-bold"><i class="fa fa-ban" style="color: red"></i> KHÔNG TÌM THẤY KẾT QUẢ</h4>
+                            </td>
+                        </tr>
+                        <tr ng-repeat="list in list | filter: txtSearch">
+                            <td>{{list.idcode}}</td>
+                            <td><img src="~/Images/Codes/{{list.img}}" height="40" width="60" /></td>
+                            <td class="font-weight-bold">{{list.title}}</td>
+                            <td>{{list.view}}</td>
+                            <td ng-show="list.coin != 0">{{list.coin}} Xu</td>
+                            <td ng-show="list.coin == 0" class="font-weight-bold">MIỄN PHÍ</td>
+                            <td>{{list.coin * 1000 | currency:"":0}} VNĐ</td>
+                            <td class="font-weight-bold">
+                                <a class="text-primary" href="/Codes/Details?id={{list.idcode}}" target="_blank"><i class="fa fa-eye"></i></a> |
+                                <a ng-click="cancelfavourite(list.id)"><i class="fa fa-trash text-danger"></i></a>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="col-lg-4 bg-white border shadow">
+                @Html.Action("All", "View")
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var app = angular.module('myApp', []);
+    app.controller('myCtrl', function ($scope, $http) {
+        $http({
+            method: "GET",
+            url: "/Codes/JsonIndexFavourite"
+        }).then(function mySuccess(response) {
+            $scope.list = response.data;
+            $scope.count = $scope.list.length;
+
+            $scope.cancelfavourite = function (id) {
+                $http({
+                    method: "GET",
+                    url: "/Codes/CancelFavourite?id=" + id
+                }).then(function mySuccess(response) {
+                    $scope.fa = response.data;
+                    $scope.countfa = $scope.fa.length;
+
+                    window.location.href = "";
+
+                }, function myError(response) {
+                    $scope.fa = response.statusText;
+                });
+            }
+
+        }, function myError(response) {
+            $scope.list = response.statusText;
+        });
+    });
+</script>
+

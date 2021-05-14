@@ -1,0 +1,262 @@
+﻿@model IEnumerable<CodeShare.Model.EF.User>
+
+@{
+    ViewBag.Title = "Quản lý người dùng";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/Content/LayoutAdmin/css/switchIOS.css" rel="stylesheet" />
+
+<div class="col-xl-12 col-md-12" ng-app="myApp">
+    <div class="card table-card container-fluid" ng-controller="myCtrl">
+        <div class="card-header">
+            <h5>@ViewBag.Title</h5>
+            <div class="card-header-right">
+                <ul class="list-unstyled card-option">
+                    <li><i class="fa fa fa-wrench open-card-option"></i></li>
+                    <li><i class="fa fa-window-maximize full-card"></i></li>
+                    <li><i class="fa fa-minus minimize-card"></i></li>
+                    <li><i class="fa fa-refresh reload-card"></i></li>
+                    <li><i class="fa fa-trash close-card"></i></li>
+                </ul>
+            </div>
+        </div>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-9">
+                    <h4 class="mt-3">TÌM KIẾM NÂNG CAO</h4>
+                    <table class="mb-5 mt-3">
+                        <tr class="two fields">
+                            <td class="field">
+                                <label class="font-weight-bold">Tìm kiếm: </label>
+                                <div class="ui icon input" style="width: 250px">
+                                    <input type="text" placeholder="VD: Trân..." ng-model="searchText">
+                                    <i class="inverted circular search link icon"></i>
+                                </div>
+                            </td>
+                            <td class="field">
+                                <label class="ml-3 font-weight-bold">Tình trạng: </label>
+                                <select class="ui search dropdown" ng-model="searchFull.active">
+                                    <option value="">Tất cả</option>
+                                    <option value="1">Hoạt động</option>
+                                    <option value="2">Không hoạt động</option>
+                                </select>
+                            </td>
+                            <td class="field">
+                                <label class="ml-3 font-weight-bold">Sắp xếp theo: </label>
+                                <select class="ui dropdown" ng-model="searchSort">
+                                    <option value="searchText">Sắp xếp mặc định</option>
+                                    <option value="searchText">Mặc định</option>
+                                    <option value="name">Chữ cái</option>
+                                    <option value="datecreate">Cũ nhất</option>
+                                    <option value="searchText">Mới nhất</option>
+                                </select>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="col-md-3">
+                    <table class="mb-4 mt-4" style="float: right">
+                        <tr>
+                            <td><a class="btn btn-dark font-weight-bold mt-4 mb-4" href="@Url.Action("Create","UsersAdmin")"><i class="fa fa-plus"></i> THÊM</a></td>
+                            <td><a class="btn btn-success font-weight-bold mt-4 mb-4 ml-3" href="@Url.Action("Deleted","UsersAdmin")"><i class="fa fa-trash"></i> THÙNG RÁC</a></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="card-block">
+            <div class="table-responsive container-fluid">
+                <table class="table table-bordered text-center">
+                    <tr>
+                        <th class="font-weight-bold">
+                            Ảnh
+                        </th>
+                        <th class="font-weight-bold">
+                            Tên Người Dùng
+                        </th>
+                        <th class="font-weight-bold">
+                            Vai Trò
+                        </th>
+                        <th class="font-weight-bold">
+                            Email
+                        </th>
+                        <th class="font-weight-bold">
+                            Tài Khoản
+                        </th>
+                        <th class="font-weight-bold">
+                            Ngày Tạo
+                        </th>
+                        <th class="font-weight-bold">
+                            Bình Luận
+                        </th>
+                        <th class="font-weight-bold" width="120">
+                            Hoạt Động
+                        </th>
+                        <th class="font-weight-bold">
+                            Tùy Chọn
+                        </th>
+                        <th class="font-weight-bold">
+                            Công Cụ
+                        </th>
+                    </tr>
+                    <tbody ng-show="(list | filter:searchText).length != 0">
+                        <tr ng-repeat="list in filteredTodos | filter: searchText | orderBy: searchSort | filter: searchFull">
+                            <td>
+                                <img src="~/Images/Users/{{list.img}}" height="60" width="60" />
+                            </td>
+                            <td class="font-weight-bold" width="170">{{list.name}}</td>
+                            <td class="font-weight-bold">
+                                <div ng-show="list.role == 2" class="text-danger">ADMIN</div>
+                                <div ng-show="list.role == 1" class="text-secondary">NGƯỜI DÙNG</div>
+                            </td>
+                            <td class="font-weight-bold">{{list.email}}</td>
+                            <td>
+                                <div ng-show="list.coin != 0" class="font-weight-bold">
+                                    <a href="/Admin/UsersAdmin/MoneyHistory?id={{list.id}}" class="text-primary">{{list.coin * 1000 | currency:"":0}} VNĐ</a>
+                                </div>
+                                <div ng-show="list.coin == 0" class="font-weight-bold" style="font-size: 14px">
+                                    {{list.coin * 1000 | currency:"":0}} VNĐ
+                                </div>
+                            </td>
+                            <td>{{list.datecreate}}</td>
+                            <td class="font-weight-bold"><a href="/Admin/UsersAdmin/CommetHistory?id={{list.id}}" class="text-primary">Chi Tiết</a></td>
+                            <td class="font-weight-bold">
+                                <div ng-show="list.active == 1">
+                                    <label ontouchstart="" class="ios-switch">
+                                        <input type="checkbox" ng-click="active(list.id)" id="checkbox" name="my-checkbox" checked>
+                                        <span>
+                                            <span class="ios-switch-inlay"></span>
+                                            <span class="ios-switch-knob"></span>
+                                        </span>
+                                    </label>
+                                </div>
+                                <div ng-show="list.active == 2">
+                                    <label ontouchstart="" class="ios-switch">
+                                        <input type="checkbox" ng-click="active(list.id)" id="checkbox" name="my-checkbox">
+                                        <span>
+                                            <span class="ios-switch-inlay"></span>
+                                            <span class="ios-switch-knob"></span>
+                                        </span>
+                                    </label>
+                                </div>
+                            </td>
+                            <td>
+                                <div ng-show="list.option == true">
+                                    <label ontouchstart="" class="ios-switch">
+                                        <input type="checkbox" ng-click="option(list.id)" id="checkbox" name="my-checkbox" checked>
+                                        <span>
+                                            <span class="ios-switch-inlay"></span>
+                                            <span class="ios-switch-knob"></span>
+                                        </span>
+                                    </label>
+                                </div>
+                                <div ng-show="list.option == false">
+                                    <label ontouchstart="" class="ios-switch">
+                                        <input type="checkbox" ng-click="option(list.id)" id="checkbox" name="my-checkbox">
+                                        <span>
+                                            <span class="ios-switch-inlay"></span>
+                                            <span class="ios-switch-knob"></span>
+                                        </span>
+                                    </label>
+                                </div>
+                            </td>
+                            <td width="110">
+                                <a href="/Admin/UsersAdmin/Edit?id={{list.id}}"><i class="fa fa-edit" style="font-size: 16px"></i></a> |
+                                <a href="/Admin/UsersAdmin/Details?id={{list.id}}"><i class="fa fa-eye" style="font-size: 16px"></i></a> |
+                                <a ng-click="bin(list.id)"><i class="fa fa-trash" style="font-size: 16px"></i></a>
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tbody ng-show="(list | filter:searchText).length == 0">
+                        <tr>
+                            <th colspan="10" class="text-center font-weight-bold"><i class="fa fa-ban" style="color: red"></i> CHƯA CÓ DỮ LIỆU</th>
+                        </tr>
+                    </tbody>
+                </table>
+                <!-- Success modal -->
+                <div class="modal" tabindex="-1" id="bin">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-body text-center font-18">
+                                <h3 class="mb-20">Xóa Thành Công</h3>
+                                <div class="mb-30 text-center">
+                                    <img src="~/Images/Modal/checked.png" />
+                                </div>
+                                <h6 class="mt-2">Dữ liệu đã được chuyển vào thùng rác!</h6>
+                            </div>
+                            <div class="modal-footer justify-content-center">
+                                <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <center>
+                <!-- Page List -->
+                <pagination ng-model="currentPage" total-items="list.length" max-size="maxSize" boundary-links="true"></pagination>
+            </center>
+        </div>
+    </div>
+</div>
+<script>
+    var app = angular.module('myApp', ['ui.bootstrap']);
+    app.controller('myCtrl', function ($scope, $http) {
+        $http({
+            method: "GET",
+            url: "/Admin/JsonAdmin/Users"
+        }).then(function mySuccess(response) {
+            //Giả định
+            $scope.filteredTodos = []
+                , $scope.currentPage = 1
+                , $scope.numPerPage = 10
+                , $scope.maxSize = 5;
+
+            //Xác định list phân trang
+            $scope.makeTodos = function () {
+                $scope.list = response.data;
+            }
+            $scope.makeTodos();
+
+            //Phân trang
+            $scope.$watch('currentPage + numPerPage', function () {
+                var begin = (($scope.currentPage - 1) * $scope.numPerPage)
+                    , end = begin + $scope.numPerPage;
+
+                $scope.filteredTodos = $scope.list.slice(begin, end);
+            });
+        }, function myError(response) {
+            $scope.list = response.statusText;
+        });
+        // Active
+        $scope.active = function (id) {
+            $http.get("/Admin/UsersAdmin/ActiveUser?id=" + id)
+                .then(function (response) {
+                    $scope.list = response.data;
+                });
+        }
+        // Option
+        $scope.option = function (id) {
+            $http.get("/Admin/UsersAdmin/OptionUser?id=" + id)
+                .then(function (response) {
+                    $scope.list = response.data;
+                });
+        }
+        // Bin
+        $scope.bin = function (id) {
+            $http.get("/Admin/UsersAdmin/Del?id=" + id)
+                .then(function (response) {
+                    $scope.list = response.data;
+                    $(document).ready(function () {
+                        $('#bin').modal('show');
+                    })
+                });
+        }
+        // Search
+        $scope.searchSort = "datecreate";
+        $scope.searchSort = "name";
+        $scope.searchSort = "searchText";
+    });
+</script>
+
+

@@ -1,0 +1,334 @@
+﻿@using CodeShare.Model.EF
+@{ 
+    DataShareCodeEntities db = new DataShareCodeEntities();
+    List<Category> categorys = db.Categorys.ToList();
+    List<News> news = db.News.ToList();
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>@ViewBag.Title</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="Travelix Project">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Sematic -->
+    <script src="~/Scripts/jquery-3.4.1.slim.min.js"></script>
+
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    <script src="~/Scripts/jquery-3.4.1.min.js"></script>
+    <link href="~/Content/Semantic-UI-CSS-master/semantic.css" rel="stylesheet" />
+    <script src="~/Content/Semantic-UI-CSS-master/semantic.min.js"></script>
+
+    <script src="~/Scripts/angular.min.js"></script>
+    <!-- Layout -->
+    <link rel="stylesheet" type="text/css" href="~/Content/Layout/styles/bootstrap4/bootstrap.min.css">
+    <link href="~/Content/Layout/plugins/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" type="text/css" href="~/Content/Layout/plugins/OwlCarousel2-2.2.1/owl.carousel.css">
+    <link rel="stylesheet" type="text/css" href="~/Content/Layout/plugins/OwlCarousel2-2.2.1/owl.theme.default.css">
+    <link rel="stylesheet" type="text/css" href="~/Content/Layout/plugins/OwlCarousel2-2.2.1/animate.css">
+    <link rel="stylesheet" type="text/css" href="~/Content/Layout/styles/style.css">
+    <link href="~/Content/Layout/styles/elements_styles.css" rel="stylesheet" />
+    <link href="~/Content/Layout/styles/main_styles.css" rel="stylesheet" />
+    <!-- Favicon -->
+    <link rel="icon" href="~/Content/Layout/images/share.png" sizes="39x39" type="image/png">
+    <!-- CKeditor -->
+    <script src="https://cdn.ckeditor.com/ckeditor5/26.0.0/classic/ckeditor.js"></script>
+    <!-- Font-Awesome -->
+    <link href="~/Content/font-awesome.min.css" rel="stylesheet" />
+    <style>
+        .fix-line-css {
+            display: block;
+            display: -webkit-box;
+            max-width: 400px;
+            height: 19px;
+            margin: 0 auto;
+            font-size: 16px;
+            line-height: 1.3;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    </style>
+</head>
+<body style="font-family: Roboto,Arial,sans-serif">
+    <div class="super_container">
+        <!-- Header -->
+        <header class="header">
+            @Html.Action("Header", "View")
+            <!-- Main Navigation -->
+            @Html.Action("Menu", "View")
+        </header>
+        <div class="menu trans_500">
+            <div class="menu_content d-flex flex-column align-items-center justify-content-center text-center">
+                <div class="menu_close_container"><div class="menu_close"></div></div>
+                <div class="logo menu_logo"><a href="#"><img src="~/Content/Layout/images/logo.png" alt=""></a></div>
+                <ul>
+                    <li class="menu_item"><a href="/">home</a></li>
+                    <li class="menu_item"><a href="about.html">about us</a></li>
+                    <li class="menu_item"><a href="offers.html">offers</a></li>
+                    <li class="menu_item"><a href="blog.html">news</a></li>
+                    <li class="menu_item"><a href="contact.html">contact</a></li>
+                </ul>
+            </div>
+        </div>
+        @RenderBody()
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="container">
+                <div class="row">
+                    <!-- Footer Column -->
+                    <div class="col-lg-3 footer_column">
+                        <div class="footer_col">
+                            <div class="footer_content footer_about">
+                                <div class="logo_container footer_logo">
+                                    <div class="logo"><a href="#" class="text-capitalize"><svg id="color_line" height="30" viewBox="0 0 74 74" width="30" xmlns="http://www.w3.org/2000/svg" data-name="color line"><path d="m18.036 23.162h35.927v5h-35.927z" fill="#e1e6e9" transform="matrix(.898 -.441 .441 .898 -7.625 18.488)" /><path d="m20.975 36.321a.5.5 0 0 1 -.45-.28l-2.2-4.488a.511.511 0 0 1 -.024-.382.5.5 0 0 1 .253-.287l32.246-15.829a.5.5 0 0 1 .67.229l2.2 4.488a.511.511 0 0 1 .024.382.5.5 0 0 1 -.253.287l-32.241 15.829a.509.509 0 0 1 -.225.051zm-1.535-4.76 1.76 3.591 31.358-15.388-1.758-3.591z" fill="#323c6b" /><path d="m33.499 30.374h5v35.927h-5z" fill="#e1e6e9" transform="matrix(.441 -.898 .898 .441 -23.255 59.354)" /><path d="m51.023 59a.5.5 0 0 1 -.22-.051l-32.252-15.833a.5.5 0 0 1 -.253-.287.511.511 0 0 1 .024-.382l2.2-4.488a.5.5 0 0 1 .67-.229l32.255 15.829a.5.5 0 0 1 .253.287.511.511 0 0 1 -.024.382l-2.2 4.488a.5.5 0 0 1 -.453.284zm-31.583-16.561 31.36 15.388 1.763-3.591-31.363-15.388z" fill="#323c6b" /><circle cx="12.987" cy="37" fill="#27ccbc" r="9.987" /><circle cx="60.054" cy="16.44" fill="#05afd6" r="9.987" /><circle cx="60.054" cy="57.56" fill="#fcd462" r="9.987" /><path d="m22.97 37a9.956 9.956 0 0 1 -4.11 8.07 9.985 9.985 0 0 0 -8.87-14.56 9.9 9.9 0 0 0 -5.88 1.92 9.982 9.982 0 0 1 18.86 4.57z" fill="#21b3a9" /><path d="m70.04 16.44a9.956 9.956 0 0 1 -4.11 8.07 9.979 9.979 0 0 0 -14.75-12.64 9.982 9.982 0 0 1 18.86 4.57z" fill="#27a2db" /><path d="m70.04 57.56a9.956 9.956 0 0 1 -4.11 8.07 9.979 9.979 0 0 0 -14.75-12.64 9.982 9.982 0 0 1 18.86 4.57z" fill="#f7be56" /><g fill="#323c6b"><path d="m6.083 26.517a.5.5 0 0 1 -.267-.924c.2-.125.4-.249.606-.364a.5.5 0 0 1 .49.872c-.191.107-.377.222-.562.339a.5.5 0 0 1 -.267.077z" /><path d="m18.583 25.8a.512.512 0 0 1 -.217-.049 12.335 12.335 0 0 0 -8.891-.725.5.5 0 0 1 -.284-.959 13.341 13.341 0 0 1 9.609.782.5.5 0 0 1 -.217.951z" /><path d="m64.688 70.184a.5.5 0 0 1 -.18-.967 12.527 12.527 0 0 0 6.6-5.886.5.5 0 0 1 .887.463 13.526 13.526 0 0 1 -7.131 6.356.494.494 0 0 1 -.176.034z" /><path d="m61.312 70.974a.5.5 0 0 1 -.05-1l.134-.014c.137-.013.275-.026.41-.045a.5.5 0 1 1 .138.99c-.149.021-.3.036-.451.05l-.13.014z" /><path d="m12.465 47.487a10.487 10.487 0 1 1 10.487-10.487 10.5 10.5 0 0 1 -10.487 10.487zm0-19.974a9.487 9.487 0 1 0 9.487 9.487 9.5 9.5 0 0 0 -9.487-9.487z" /><path d="m59.533 26.927a10.487 10.487 0 1 1 10.487-10.487 10.5 10.5 0 0 1 -10.487 10.487zm0-19.973a9.487 9.487 0 1 0 9.487 9.486 9.5 9.5 0 0 0 -9.487-9.486z" /><path d="m59.533 68.046a10.487 10.487 0 1 1 10.487-10.486 10.5 10.5 0 0 1 -10.487 10.486zm0-19.973a9.487 9.487 0 1 0 9.487 9.487 9.5 9.5 0 0 0 -9.487-9.487z" /></g></svg> ShareThis</a></div>
+                                </div>
+                                <p class="footer_about_text">THANH TOÁN QUA:</p>
+                                <img src="~/Content/Layout/images/b11.png" />
+                                <img class="ml-3" style="background-color: whitesmoke; padding: 4px" src="~/Content/Layout/images/b7.png" />
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Footer Column -->
+                    <div class="col-lg-3 footer_column">
+                        <div class="footer_col">
+                            <div class="footer_title">tin tức nổi bật</div>
+                            <div class="footer_content footer_blog">
+                                <!-- Footer blog item -->
+                                @foreach (var item in news.Where(n => n.news_active == 1 && n.news_del == false && n.news_active == 1 && n.news_option == true).OrderByDescending(n => n.news_datecreate).Take(3))
+                                {
+                                    <div class="footer_blog_item clearfix">
+                                        <div class="footer_blog_image"><img src="~/Images/News/@item.news_img" style="width: 60px; height: 60px" alt="@item.news_name"></div>
+                                        <div class="footer_blog_content">
+                                            <div class="footer_blog_title fix-line-css"><a href="@Url.Action("Details","News", new { id = item.news_id })">@item.news_name</a></div>
+                                            <i class="fa fa-bookmark text-warning"></i>
+                                            @{
+                                                var count = item.Groups.Count();
+                                                var countgr = 0;
+                                            }
+                                            @foreach (var lang in item.Groups)
+                                            {
+                                                countgr++;
+                                                if (count == countgr)
+                                                {
+                                                    <b style="position: inherit; color: white">@lang.Category.category_name</b>
+                                                }
+                                                else
+                                                {
+                                                    <b style="position: inherit; color: white">@lang.Category.category_name |</b>
+                                                }
+                                            }
+                                            <div style="color: white; font-weight: 600"><i class="fa fa-calendar text-success"></i> @item.news_datecreate.Value.ToShortDateString()</div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Footer Column -->
+                    <div class="col-lg-3 footer_column">
+                        <div class="footer_col">
+                            <div class="footer_title">Danh Mục</div>
+                            <div class="footer_content footer_tags">
+                                <ul class="tags_list clearfix">
+                                    @foreach (var item in categorys.Where(n => n.category_active == true && n.category_item == 1).Take(10))
+                                    {
+                                        <li class="tag_item"><a href="#">@item.category_name</a></li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Footer Column -->
+                    <div class="col-lg-3 footer_column">
+                        <div class="footer_col">
+                            <div class="footer_title">liên hệ</div>
+                            <div class="footer_content footer_contact">
+                                <ul class="contact_info_list">
+                                    <li class="contact_info_item d-flex flex-row">
+                                        <div><div class="contact_info_icon"><img src="~/Content/Layout/images/placeholder.svg" alt=""></div></div>
+                                        <div class="contact_info_text">06 Trần Văn Ơn, Phú Hoà, Thủ Dầu Một, Bình Dương</div>
+                                    </li>
+                                    <li class="contact_info_item d-flex flex-row">
+                                        <div><div class="contact_info_icon"><img src="~/Content/Layout/images/phone-call.svg" alt=""></div></div>
+                                        <a href="tel:+84 869 139 879" class="contact_info_text">+84 869 139 879</a>
+                                    </li>
+                                    <li class="contact_info_item d-flex flex-row">
+                                        <div><div class="contact_info_icon"><img src="~/Content/Layout/images/message.svg" alt=""></div></div>
+                                        <div class="contact_info_text"><a href="mailto: vuongbaot1905@gmail.com" target="_top">vuongbaot1905@gmail.com</a></div>
+                                    </li>
+                                    <li class="contact_info_item d-flex flex-row">
+                                        <div><div class="contact_info_icon"><img src="~/Content/Layout/images/planet-earth.svg" alt=""></div></div>
+                                        <div class="contact_info_text"><a href="mailto: 1724801030160@student.tdmu.edu.vn">1724801030160@student.tdmu.edu.vn</a></div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        <!-- Copyright -->
+        <div class="copyright">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-3 order-lg-1 order-2  ">
+                        <div class="copyright_content d-flex flex-row align-items-center">
+                            <div>
+                                <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                                Copyright &copy;
+                                <script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
+                                <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-9 order-lg-2 order-1">
+                        <div class="footer_nav_container d-flex flex-row align-items-center justify-content-lg-end">
+                            <div class="footer_nav">
+                                <ul class="footer_nav_list">
+                                    <li class="footer_nav_item"><a href="#">home</a></li>
+                                    <li class="footer_nav_item"><a href="about.html">about us</a></li>
+                                    <li class="footer_nav_item"><a href="offers.html">offers</a></li>
+                                    <li class="footer_nav_item"><a href="blog.html">news</a></li>
+                                    <li class="footer_nav_item"><a href="contact.html">contact</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Modal -->
+        <div class="modal fade" id="login" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <link href="~/Content/Layout/Users/CSS/user.css" rel="stylesheet" />
+                        <div class="home-content"></div>
+                        <div class="contact_form_section" style="margin-bottom: 15vh;">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col">
+                                        <div id="">
+                                            <header class="main-panel" style="width: inherit">
+                                                <form class="ui form" action="@Url.Action("LoginModal", "Users")" method="post">
+                                                    <h3 class="text-center text-dark">ĐĂNG NHẬP</h3>
+                                                    <p class="text-center">Bạn phải đăng nhập để nhận quà tặng của mình.</p>
+                                                    <div class="container" style="width: 600px">
+                                                        <div class="field">
+                                                            <label><i class="fa fa-envelope-o font-weight-bold"></i> Email/Gmail</label>
+                                                            <input placeholder="vuongbaot@gmail.com" name="Email" type="text">
+                                                        </div>
+                                                        <div class="field">
+                                                            <label><i class="fa fa-lock font-weight-bold"></i> Mật khẩu</label>
+                                                            <input type="password" name="Password" placeholder="******">
+                                                        </div>
+                                                        <div class="fields two">
+                                                            <div class="inline field">
+                                                                <div class="ui checkbox">
+                                                                    <input type="checkbox" name="terms">
+                                                                    <label><b>Ghi nhớ</b></label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="field">
+                                                                <span style="font-family: 'Segoe UI'; color: red; font-weight: 600"><a href="@Url.Action("ForgotPassword","Users")">Quên mật khẩu?</a></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <input class="mt-3" type="submit" value="ĐĂNG NHẬP">
+                                                    <div class="clearfix"></div>
+                                                    <center class="mt-3 font-weight-bold" style="color: red">@TempData["noti_login"]</center>
+                                                    <div class="ui error message"></div>
+                                                </form>
+                                                <footer class="text-center">
+                                                    <fieldset>
+                                                        <legend>Or use Facebook / Twitter / Google</legend>
+                                                        <div class="socialFb">
+                                                            <svg style="width:24px;height:24px" viewBox="0 0 24 24">
+                                                                <path fill="#FFF" d="M17,2V2H17V6H15C14.31,6 14,6.81 14,7.5V10H14L17,10V14H14V22H10V14H7V10H10V6A4,4 0 0,1 14,2H17Z" />
+                                                            </svg>
+                                                        </div>
+                                                        <div class="socialTw">
+                                                            <svg style="width:24px;height:24px" viewBox="0 0 24 24">
+                                                                <path fill="#FFF" d="M22.46,6C21.69,6.35 20.86,6.58 20,6.69C20.88,6.16 21.56,5.32 21.88,4.31C21.05,4.81 20.13,5.16 19.16,5.36C18.37,4.5 17.26,4 16,4C13.65,4 11.73,5.92 11.73,8.29C11.73,8.63 11.77,8.96 11.84,9.27C8.28,9.09 5.11,7.38 3,4.79C2.63,5.42 2.42,6.16 2.42,6.94C2.42,8.43 3.17,9.75 4.33,10.5C3.62,10.5 2.96,10.3 2.38,10C2.38,10 2.38,10 2.38,10.03C2.38,12.11 3.86,13.85 5.82,14.24C5.46,14.34 5.08,14.39 4.69,14.39C4.42,14.39 4.15,14.36 3.89,14.31C4.43,16 6,17.26 7.89,17.29C6.43,18.45 4.58,19.13 2.56,19.13C2.22,19.13 1.88,19.11 1.54,19.07C3.44,20.29 5.7,21 8.12,21C16,21 20.33,14.46 20.33,8.79C20.33,8.6 20.33,8.42 20.32,8.23C21.16,7.63 21.88,6.87 22.46,6Z" />
+                                                            </svg>
+                                                        </div>
+                                                        <div class="socialGo">
+                                                            <svg style="width:24px;height:24px" viewBox="0 0 24 24">
+                                                                <path fill="#FFF" d="M23,11H21V9H19V11H17V13H19V15H21V13H23M8,11V13.4H12C11.8,14.4 10.8,16.4 8,16.4C5.6,16.4 3.7,14.4 3.7,12C3.7,9.6 5.6,7.6 8,7.6C9.4,7.6 10.3,8.2 10.8,8.7L12.7,6.9C11.5,5.7 9.9,5 8,5C4.1,5 1,8.1 1,12C1,15.9 4.1,19 8,19C12,19 14.7,16.2 14.7,12.2C14.7,11.7 14.7,11.4 14.6,11H8Z" />
+                                                            </svg>
+                                                        </div>
+                                                    </fieldset>
+                                                    <p class="mt-3">Bạn chưa có tài khoản?</p>
+                                                    <a href="@Url.Action("SignUp", "Users")" style="font-family: 'Segoe UI'; font-weight: 600">Đăng ký</a>
+                                                </footer>
+                                            </header>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <script>
+                            // Is a Built In Function Used To Return The Same Measured Value Of An Element Like (width, height, margin, padding)
+                            var x = document.querySelector(".head");
+                            x.style.height = getComputedStyle(x).width;
+
+                            var y = document.querySelector(".ear");
+                            y.style.height = getComputedStyle(y).width;
+
+                            var z = document.querySelector(".right");
+                            z.style.height = getComputedStyle(z).width;
+
+                            // Hide/Show Button (Setting) To Manipulate Of The Form
+
+                            let mainContainer = document.getElementById("wrapper");
+                            let exitButton = document.getElementById("exit");
+                            let showButton = document.getElementById("show");
+
+                            exitButton.onclick = function () {
+                                "use strict";
+                                if (mainContainer.style.display = "block") {
+                                    mainContainer.style.display = "none";
+                                    showButton.style.display = "inline-block";
+                                } else {
+                                    mainContainer.style.display = "block";
+                                    showButton.style.display = "none";
+
+                                }
+                            }
+                            showButton.onclick = function () {
+                                "use strict";
+                                if (mainContainer.style.display = "none") {
+                                    mainContainer.style.display = "block";
+                                    showButton.style.display = "none";
+                                }
+                            }
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @Html.Action("Validation","View")
+
+    <script src="~/Content/Layout/js/jquery-3.2.1.min.js"></script>
+
+    <script src="~/Scripts/jquery.signalR-2.4.1.min.js"></script>
+    <script src="~/signalr/hubs" type="text/javascript"></script>
+
+    <script src="~/Content/Layout/styles/bootstrap4/popper.js"></script>
+    <script src="~/Content/Layout/styles/bootstrap4/bootstrap.min.js"></script>
+    <script src="~/Content/Layout/plugins/OwlCarousel2-2.2.1/owl.carousel.js"></script>
+    <script src="~/Content/Layout/plugins/easing/easing.js"></script>
+    <script src="~/Content/Layout/js/custom.js"></script>
+</body>
+</html>

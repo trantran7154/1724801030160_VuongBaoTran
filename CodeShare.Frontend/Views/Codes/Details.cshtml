@@ -1,0 +1,1096 @@
+﻿@using CodeShare.Model.EF;
+@using CodeShare.Common;
+@using CodeShare.Frontend.Functions;
+@model Code
+
+@{
+    DataShareCodeEntities db = new DataShareCodeEntities();
+    FunctionsController functions = new FunctionsController();
+
+    ViewBag.Title = Model.code_title;
+
+    var coo = new FunctionsController();
+    var user = coo.CookieID();
+}
+
+@{
+    List<Order> oder = db.Orders.ToList();
+    List<Group> groups = db.Groups.ToList();
+    List<Code> codes = db.Codes.ToList();
+}
+
+<style>
+    .fix-line-css {
+        display: block;
+        display: -webkit-box;
+        max-width: 400px;
+        height: 19px; /* Fallback for non-webkit */
+        margin: 0 auto;
+        font-size: 16px;
+        line-height: 1.3;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+</style>
+
+<div class="home" style=" height: 250px">
+    <div class="home_background parallax-window" data-parallax="scroll" style="background-image: url('../../Images/Codes/blue-dark-background-brightness-megaphone-set-windows-web-programming-language-codes-gears-vector-illustration-111990452.jpg');"></div>
+</div>
+<div class="testimonials" style="background-color: #f0f0f0; font-family: Roboto,Arial,sans-serif;padding-top: 22px;" ng-app="myApp">
+    <div class="test_border"></div>
+    <div class="container" style="max-width: 1500px; font-size: 16px" ng-controller="myCtrl">
+        <div class="row">
+            <div class="col-lg-9 bg-white border shadow text-dark">
+                <div class="row mt-3">
+                    <div class="col-lg-4">
+                        <div style="padding: 10px">
+                            <img src="~/Images/Codes/@Model.code_img" style="width: 100%; height: 280px" />
+                        </div>
+                        <center class="font-weight-bold" style="padding: 10px; background-color: azure; border-radius: 10px">#@Model.code_tag</center>
+                    </div>
+                    <div class="col-lg-8">
+                        <div style="padding: 10px">
+                            <h3>@Model.code_title [Mã code: @Model.code_code]</h3>
+                            <hr />
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    @if (Model.code_coin == 0)
+                                    {
+                                        <div style="font-size: 20px"><b class="text-dark">PHÍ TẢI:</b> <b class="text-danger">MIỄN PHÍ</b></div>
+                                    }
+                                    else
+                                    {
+                                        <div style="font-size: 20px"><b class="text-dark">PHÍ TẢI:</b> <b class="text-danger">@Model.code_coin XU</b></div>
+                                    }
+                                </div>
+                                <div class="col-lg-6">
+                                    @if (functions.Cookie() != null)
+                                    {
+                                        <button ng-show="countfa == 0" ng-click="favourite(@Model.code_id)" style="cursor:pointer !important" class="btn btn-default float-right font-weight-bold"><i class="fa fa-heart">&nbsp;</i> Yêu thích</button>
+                                        <button ng-repeat="fa in fa" ng-show="countfa != 0" ng-click="cancelfavourite(fa.id)" style="cursor:pointer !important" class="btn btn-danger float-right font-weight-bold"><i class="fa fa-heart">&nbsp;</i> Hủy yêu thích</button>
+                                    }
+                                    else
+                                    {
+                                        <button data-toggle="modal" data-target="#login" style="cursor:pointer !important" class="btn btn-default float-right font-weight-bold"><i class="fa fa-heart">&nbsp;</i> Yêu thích</button>
+                                    }
+                                </div>
+                            </div>
+                            <hr />
+                            <div class="row">
+                                <div class="col-lg-8">
+                                    <div>
+                                        <b><i class="fa fa-th-list"></i> Danh mục: </b> @Model.Category.category_name
+                                    </div>
+                                    <div class="mt-2">
+                                        <b><i class="fa fa-table"></i> Thể loại: </b>
+                                        @foreach (var item in groups.Where(n => n.code_id == Model.code_id && n.group_item == Common.ITEM_LANGUAGE_CODE))
+                                        {
+                                            <span style="border: 1px solid black; padding: 6px; border-radius: 3px" class="text-primary font-weight-bold"> @item.Language.language_name</span><span>&nbsp;</span>
+                                        }
+                                    </div>
+                                    <div class="mt-2">
+                                        <b><i class="fa fa-code font-weight-bold"></i> Nhóm code: </b> Code chất lượng
+                                    </div>
+                                    <div class="mt-1">
+                                        <b><i class="fa fa-calendar"></i> Ngày đăng: </b> @Model.code_datecreate.Value.ToString("dd/MM/yyyy")
+                                    </div>
+                                    <div class="mt-1">
+                                        <b><i class="fa fa-cloud-download"></i> Dung lượng: </b> @Model.code_disk MB
+                                    </div>
+                                    <div class="mt-1">
+                                        <b><i class="fa fa-star-o font-weight-bold"></i> Đánh giá: </b> 10 điểm
+                                    </div>
+                                    <div class="mt-1">
+                                        <b><i class="fa fa-eye"></i> Lượt xem: </b> @Model.code_view
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    @if (functions.Cookie() != null)
+                                    {
+                                        var id = functions.CookieID();
+                                        if (id.user_id == Model.user_id)
+                                        {
+                                            <button onclick="window.location.href='#pay'" class="btn btn-success float-right font-weight-bold w-100 text-uppercase" style="font-size: 20px; height: 70px">Code của bạn</button>
+
+                                        }
+                                        else
+                                        {
+                                            if (Model.code_coin > 100)
+                                            {
+                                                <button onclick="window.location.href='#pay'" class="btn btn-success float-right font-weight-bold w-100" style="font-size: 20px; height: 70px"><i class="fa fa-download"></i> TẢI CODE NGAY</button>
+                                                <button class="btn btn-default float-right font-weight-bold mt-3 w-100" onclick="window.location.href='@Model.code_linkdemo'" style="font-size: 20px; height: 70px"><i class="fa fa-television"></i> DEMO</button>
+                                            }
+                                            else
+                                            {
+                                                <button onclick="window.location.href='#pay'" class="btn btn-success float-right font-weight-bold w-100" style="font-size: 20px; height: 70px"><i class="fa fa-download"></i> TẢI CODE NGAY</button>
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <button onclick="window.location.href='#pay'" class="btn btn-success float-right font-weight-bold w-100" style="font-size: 20px; height: 70px"><i class="fa fa-download"></i> TẢI CODE NGAY</button>
+                                        <button class="btn btn-default float-right font-weight-bold mt-3 w-100" onclick="window.location.href='@Model.code_linkdemo'" style="font-size: 20px; height: 70px"><i class="fa fa-television"></i> DEMO</button>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-12 mt-3">
+                        <div style="border: 1px dashed green">
+                            <div style="padding: 10px">
+                                <center>
+                                    @if (Model.code_linkdown == null)
+                                    {
+                                        <i class="fa fa-check-circle text-danger"></i> <span>Link tải lậu &nbsp; &nbsp;</span>
+                                    }
+                                    else
+                                    {
+                                        <i class="fa fa-check-circle text-success"></i> <span>Có link tải tốt &nbsp; &nbsp;</span>
+                                    }
+                                    @if (Model.code_linkdemo == null)
+                                    {
+                                        <i class="fa fa-check-circle text-danger"></i> <span>Link demo không có &nbsp; &nbsp;</span>
+                                    }
+                                    else
+                                    {
+                                        <i class="fa fa-check-circle text-success"></i> <span>Có link demo &nbsp; &nbsp;</span>
+                                    }
+                                    @if (Model.User.user_coin > 400)
+                                    {
+                                        <i class="fa fa-check-circle text-success"></i> <span>Người bán chất lượng &nbsp; &nbsp;</span>
+                                    }
+                                    else if (Model.User.user_coin > 100)
+                                    {
+                                        <i class="fa fa-check-circle text-success"></i> <span>Người bán uy tín  &nbsp; &nbsp;</span>
+                                    }
+                                    else
+                                    {
+                                        <i class="fa fa-check-circle text-danger"></i> <span>Người bán trung bình &nbsp; &nbsp;</span>
+                                    }
+                                    @if (Model.code_setting.Length > 40)
+                                    {
+                                        <i class="fa fa-check-circle text-success"></i> <span>Hướng dẫn chi tiết &nbsp; &nbsp;</span>
+                                    }
+                                    else
+                                    {
+                                        <i class="fa fa-check-circle text-danger"></i> <span> Hướng dẫn không chi tiết &nbsp; &nbsp;</span>
+                                    }
+                                    @if (Model.code_info.Length > 40)
+                                    {
+                                        <i class="fa fa-check-circle text-success"></i> <span> Giới thiệu rõ ràng &nbsp; &nbsp;</span>
+                                    }
+                                    else
+                                    {
+                                        <i class="fa fa-check-circle text-danger"></i> <span> Giới thiệu ngắn &nbsp; &nbsp;</span>
+                                    }
+                                </center>
+                            </div>
+                        </div>
+                        <hr />
+                        <div class="alert alert-success">
+                            @Html.Raw(Model.code_info)
+                        </div>
+                        <hr />
+                        <nav>
+                            <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                                <a class="nav-link active font-weight-bold bg-success text-white" style="padding: 12px; font-family: 'Segoe UI'"><i class="fa fa-pencil"></i> Mô tả chi tiết</a>
+                            </div>
+                        </nav>
+                        <div class="tab-content" style="border-left: 1px solid #dbd4d4; border-bottom: 1px solid #dbd4d4; border-right: 1px solid #dbd4d4">
+                            <div class="tab-pane fade show active" style="padding: 20px">@Html.Raw(Model.code_des)</div>
+                        </div>
+                    </div>
+                    <div class="col-lg-12 mt-3">
+                        <nav>
+                            <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                                <a class="nav-link active font-weight-bold bg-success text-white" style="padding: 12px; font-family: 'Segoe UI'"><i class="fa fa-cog"></i> Hướng dẫn cài đặt</a>
+                            </div>
+                        </nav>
+                        <div class="tab-content" style="border-left: 1px solid #dbd4d4; border-bottom: 1px solid #dbd4d4; border-right: 1px solid #dbd4d4">
+                            <div class="tab-pane fade show active" style="padding: 20px">@Html.Raw(Model.code_setting)</div>
+                        </div>
+                    </div>
+                    <div class="col-lg-12 mt-3" id="pay">
+                        <p style="color: #7e592a">
+                            @if (Model.code_disk == null)
+                            {
+                                <nav>
+                                    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                                        <a class="nav-link active font-weight-bold bg-success text-white" style="padding: 12px; font-family: 'Segoe UI'"><i class="fa fa-cog"></i> Thông số code</a>
+                                    </div>
+                                </nav>
+                                <div class="tab-content" style="border-left: 1px solid #dbd4d4; border-bottom: 1px solid #dbd4d4; border-right: 1px solid #dbd4d4">
+                                    <div class="tab-pane fade show active" style="padding: 20px">Không xác định được thông số!</div>
+                                </div>
+                            }
+                            else
+                            {
+                                <nav>
+                                    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                                        <a class="nav-link active font-weight-bold bg-success text-white" style="padding: 12px; font-family: 'Segoe UI'"><i class="fa fa-cloud-download"></i> Thông số code</a>
+                                    </div>
+                                </nav>
+                                <div class="tab-content" style="border-left: 1px solid #dbd4d4; border-bottom: 1px solid #dbd4d4; border-right: 1px solid #dbd4d4">
+                                    <div class="tab-pane fade show active" style="padding:20px">@Model.code_disk MB</div>
+                                </div>
+                            }
+                        </p>
+                    </div>
+                    <div class="col-lg-12 mt-3">
+                        <div style="padding: 20px">
+                            <div class="row border">
+                                <div class="col-lg-6">
+                                    <h3 class="mt-3 font-weight-bold">LINK DOWNLOAD</h3>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div style="padding: 20px" class="float-right">
+                                        <div class="mb-2">Pass giải nén (Nếu có): @(Model.code_coin > 0 ? "Mua code để có mật khẩu." : Model.code_pass) <br /></div>
+                                        @if (Model.code_coin == 0)
+                                        {
+                                            if (functions.Cookie() != null)
+                                            {
+                                                <button onclick="window.location.href = '@Model.code_linkdown'" class="btn btn-success float-right font-weight-bold" style="font-size: 20px; height: 70px"><i class="fa fa-download">&nbsp;</i>TẢI CODE NGAY</button>
+                                            }
+                                            else
+                                            {
+                                                <button data-toggle="modal" data-target="#login" class="btn btn-success float-right font-weight-bold" style="font-size: 20px; height: 70px"><i class="fa fa-download">&nbsp;</i>TẢI CODE NGAY</button>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if (functions.Cookie() != null)
+                                            {
+                                                var id = functions.CookieID();
+                                                if (id.user_id == Model.user_id)
+                                                {
+                                                    <button onclick="window.location.href='#pay'" class="btn btn-success float-right font-weight-bold" style="font-size: 20px; height: 70px">Code của bạn</button>
+                                                }
+                                                else
+                                                {
+
+                                                    if (oder.Where(n => n.user_id == id.user_id && n.code_id == Model.code_id && n.cate_orders == 1).Count() != 0)
+                                                    {
+                                                        foreach (var item in oder.Where(n => n.user_id == id.user_id && n.code_id == Model.code_id && n.cate_orders == 1))
+                                                        {
+                                                            <button onclick="window.location.href = '/Codes/DetailsCodeSell?id=@item.oder_id'" data-toggle="modal" data-target="#coin" class="btn btn-success float-right font-weight-bold w-100" style="font-size: 20px; height: 70px"><i class="fa fa-download">&nbsp;</i>THÔNG TIN CODE</button>
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        <button data-toggle="modal" data-target="#coin" class="btn btn-success float-right font-weight-bold w-100" style="font-size: 20px; height: 70px"><i class="fa fa-download">&nbsp;</i>TẢI CODE NGAY</button>
+                                                    }
+
+                                                }
+                                            }
+                                            else
+                                            {
+
+                                                <button data-toggle="modal" data-target="#login" class="btn btn-success float-right font-weight-bold w-100" style="font-size: 20px; height: 70px"><i class="fa fa-download">&nbsp;</i>TẢI CODE NGAY</button>
+                                            }
+
+                                            if (functions.Cookie() != null)
+                                            {
+                                                var id = functions.CookieID();
+                                                <div class="modal fade" id="coin" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                    <div class="modal-dialog modal-lg">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header bg-success">
+                                                                <center>
+                                                                    <h5 class="font-weight-bold text-white" id="exampleModalLabel">DOWNLOAD SOURCE CODE</h5>
+                                                                </center>
+                                                                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                </button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <center>
+                                                                    <i class="fa fa-user">&nbsp;</i>@id.user_name &nbsp;&nbsp;
+                                                                    <i class="fa fa-envelope">&nbsp;</i>@id.user_email &nbsp;&nbsp;
+                                                                    <b class="text-danger">Số xu khả dụng: </b>@id.user_coin xu &nbsp;&nbsp;
+                                                                </center>
+                                                                <hr />
+                                                                <center style="font-size: 24px">
+                                                                    <b>Khả dụng:</b> @id.user_coin xu <br />
+                                                                    <b>Download code:</b> @Model.code_coin xu <br />
+                                                                    <div>--------------------------------------------------</div>
+                                                                    @if (id.user_coin >= Model.code_coin)
+                                                                    {
+                                                                        <b>Đã đủ:</b> <span>@Model.code_coin xu <br /></span>
+                                                                        <br />
+                                                                        <button class="btn btn-danger" onclick="window.location.href='/Codes/PayCode?coder=@Model.user_id&id=@Model.code_id'" style="font-size: 19px">Download code này</button>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <b>Còn thiếu:</b> <span>@(Model.code_coin - id.user_coin) xu <br /></span>
+                                                                        <br />
+                                                                        <button class="btn btn-danger text-capitalize"  onclick="window.location.href='/Pays/Index'" style="font-size: 19px">Nạp tiền vào tài khoản</button>
+                                                                    }
+                                                                </center>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            }
+                                            else
+                                            {
+
+                                            }
+                                        }
+                                        <br />
+                                        <br />
+                                        <br />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Đánh giá -->
+                    <div class="col-lg-12">
+                        <div class="card">
+                            <div style="padding: 10px">
+                                <div class="row">
+                                    <div class="col-lg-6" style="height: 300px">
+                                        <style>
+                                            .cv{
+                                                overflow-y: auto;
+                                                height: 300px;
+                                            }
+                                        </style>
+                                        <div class="cv">
+                                            @foreach (var item in db.Ratings.Where(n => n.code_id == Model.code_id).OrderByDescending(n => n.rating_datecreate))
+                                            {
+                                                <div class="row">
+                                                    <div class="col-lg-12">
+                                                        <b>@item.User.user_name - Khuyến nghị: @(item.rating_like == true ? "Nên tải" : "Nên xem lại")</b> <br />
+                                                        <div class="ui star rating" data-rating="@item.rating_sum" data-max-rating="5" style="background-color: white"></div> (@item.rating_sum/5)
+                                                        <p>@item.rating_content</p>
+                                                        <table style="font-size: 10px">
+                                                            <tr>
+                                                                <td class="font-weight-bold">
+                                                                    Code này có chất lượng: <br />
+                                                                    <div class="ui rating star" data-rating="@item.rating_cl" data-max-rating="5" style="background-color: white;"></div> (@item.rating_cl/5)
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="font-weight-bold">
+                                                                    Code này có demo rỏ ràng:
+                                                                    <br />
+                                                                    <div class="ui rating star" data-rating="@item.rating_dmrr" data-max-rating="5" style="background-color: white;"></div> (@item.rating_dmrr/5)
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="font-weight-bold">
+                                                                    Code chạy được: <br />
+                                                                    <div class="ui rating star" data-rating="@item.rating_run" data-max-rating="5" style="background-color: white;"></div> (@item.rating_run/5)
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                        <hr />
+                                                    </div>
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <table>
+                                            @{
+                                                var cl = db.Ratings.Where(n => n.code_id == Model.code_id).Sum(n => n.rating_cl);
+                                                var dm = db.Ratings.Where(n => n.code_id == Model.code_id).Sum(n => n.rating_dmrr);
+                                                var run = db.Ratings.Where(n => n.code_id == Model.code_id).Sum(n => n.rating_run);
+                                                var cc = db.Ratings.Where(n => n.code_id == Model.code_id).Count();
+                                                var scl = cl / cc;
+                                                var sdm = dm / cc;
+                                                var srun = sdm / cc;
+                                            }
+                                            <tr class="font-weight-bold">
+                                                <td>
+                                                    <div class="mt-3">
+                                                        Code này có chất lượng:
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="ui star rating" data-rating="@scl" data-max-rating="5" style="background-color: white"></div> (@scl/5)
+                                                </td>
+                                            </tr>
+                                            <tr class="font-weight-bold">
+                                                <td>
+                                                    <div class="mt-3">
+                                                        Code này có demo rỏ ràng:
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="ui star rating" data-rating="@sdm" data-max-rating="5" style="background-color: white"></div> (@sdm/5)
+                                                </td>
+                                            </tr>
+                                            <tr class="font-weight-bold">
+                                                <td>
+                                                    <div class="mt-3">
+                                                        Code chạy được:
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="ui star rating" data-rating="@srun" data-max-rating="5" style="background-color: white"></div> (@srun/5)
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                @{ 
+                                                    var like = db.Ratings.Where(n => n.code_id == Model.code_id && n.rating_like == true).Count();
+                                                    var likenone = db.Ratings.Where(n => n.code_id == Model.code_id && n.rating_like == false).Count();
+                                                   
+                                                }
+                                                <td class="font-weight-bold mt-3">
+                                                    Tỷ lệ yêu thích code này: 
+                                                </td>
+                                                <td class="font-weight-bold mt-3">
+                                                    <div class="font-weight-bold">Có <b class="text-success"> <i class="fa fa-arrow-circle-o-up"></i> @like</b> lượt thích và <b class="text-danger"> <i class="fa fa-arrow-circle-down"></i> @likenone</b> Không thích</div>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <script>
+                            $('.ui.rating')
+                                .rating({
+                                    interactive: false
+                                })
+                        </script>
+                    </div>
+                    <hr />
+                    <style>
+                        .card-no-border .card {
+                            border: 0px;
+                            border-radius: 4px;
+                            -webkit-box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.05);
+                            box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.05)
+                        }
+
+                        .card-body {
+                            -ms-flex: 1 1 auto;
+                            flex: 1 1 auto;
+                            padding: 1.25rem
+                        }
+
+                        .comment-widgets .comment-row:hover {
+                            background: rgba(0, 0, 0, 0.02);
+                            cursor: pointer
+                        }
+
+                        .comment-widgets .comment-row {
+                            border-bottom: 1px solid rgba(120, 130, 140, 0.13);
+                            padding: 15px
+                        }
+
+                        .comment-text:hover {
+                            visibility: hidden
+                        }
+
+                        .comment-text:hover {
+                            visibility: visible
+                        }
+
+                        .label {
+                            padding: 3px 10px;
+                            line-height: 13px;
+                            color: #ffffff;
+                            font-weight: 400;
+                            border-radius: 4px;
+                            font-size: 75%
+                        }
+
+                        .round img {
+                            border-radius: 100%
+                        }
+
+                        .label-info {
+                            background-color: #1976d2
+                        }
+
+                        .label-success {
+                            background-color: green
+                        }
+
+                        .label-danger {
+                            background-color: #ef5350
+                        }
+
+                        .action-icons a {
+                            padding-left: 7px;
+                            vertical-align: middle;
+                            color: #99abb4
+                        }
+
+                            .action-icons a:hover {
+                                color: #1976d2
+                            }
+
+                        .mt-100 {
+                            margin-top: 100px
+                        }
+
+                        .mb-100 {
+                            margin-bottom: 100px
+                        }
+                    </style>
+
+                    <!-- Bình Luận -->
+                    <div class="col-lg-12 mt-3" ng-controller="myComment" id="topcomment">
+                        <!-- Main Body -->
+                        <div class="container d-flex justify-content-center mb-100">
+                            <div class="row w-100">
+                                <div class="col-md-12">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h4 class="card-title"><i class="fa fa-comments"></i> Bình luận cho <b class="text-primary">@Model.code_title</b></h4>
+                                        </div>
+                                        <div class="comment-widgets m-b-20">
+                                            <div class="d-flex flex-row comment-row" ng-repeat="com in com">
+                                                <div ng-show="com.imgid == null" class="p-2"><span class="round"><img src="~/Images/Users/notimg.png" alt="user" width="50"></span></div>
+                                                <div ng-show="com.imgid != null" class="p-2"><span class="round"><img src="~/Images/Users/notimg.png" alt="user" width="50"></span></div>
+                                                <div class="comment-text w-100">
+                                                    <h5 class="font-weight-bold">{{com.nameid}}</h5>
+                                                    <div class="comment-footer"> <span class="date"><small>Just now</small></span> <span class="label label-info">Pending</span> <span class="action-icons"> <a href="#" data-abc="true"><i class="fa fa-pencil"></i></a> <a href="#" data-abc="true"><i class="fa fa-rotate-right"></i></a> <a href="#" data-abc="true"><i class="fa fa-heart"></i></a> </span> </div>
+                                                    <p class="m-b-5 m-t-10">
+                                                        {{com.content}}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex flex-row mt-3">
+                                        <textarea name="content" class="form-control" placeholder="Nhập nội dung để bình luận! Có thể nhấn Enter để gửi." style="height: 120px"></textarea>
+                                    </div>
+                                    <br />
+                                    <button class="btn btn-danger font-weight-bold float-right" ng-click="createcomment(@Model.code_id)">Bình luận <i class="fa fa-paper-plane"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 bg-white border shadow text-dark">
+                <div style="padding: 10px; font-size: 16px">
+                    <div class="card shadow mt-3">
+                        <div style="padding: 10px">
+                            <h4 class="font-weight-bold"><i class="fa fa-user"></i> NGƯỜI BÁN</h4>
+                            <table>
+                                <tr>
+                                    <td width="20%">
+                                        <div style="padding: 10px">
+                                            <img src="~/Images/Users/@Model.User.user_img" style="width: 100px; height: 100px" />
+                                        </div>
+                                    </td>
+                                    <td width="80%">
+                                        <h5 class="font-weight-bold text-danger">@Model.User.user_name</h5>
+                                        <hr />
+                                        <b>Code miển phí: </b> @db.Codes.Where(n => n.user_id == Model.user_id && n.code_coin == 0).Count() <br />
+                                        <b>Code có phí: </b> @db.Codes.Where(n => n.user_id == Model.user_id && n.code_coin > 0).Count() <br />
+
+                                        @if (functions.Cookie() != null)
+                                        {
+                                            if (Model.user_id == functions.CookieID().user_id)
+                                            {
+
+                                            }
+                                            else
+                                            {
+                                                <button onclick="window.location.href='/Tools/Chats/@Model.user_id'" class="btn btn-danger mt-2"><i class="fa fa-comment"></i>&nbsp;Chat</button>
+
+                                                <button class="btn btn-danger mt-2"><i class="fa fa-heart"></i>&nbsp;Follow</button>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <button onclick="" class="btn btn-danger mt-2"><i class="fa fa-comment"></i>&nbsp;Chat</button>
+
+                                            <button class="btn btn-danger mt-2"><i class="fa fa-heart"></i>&nbsp;Follow</button>
+                                        }
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    @if (user != null)
+                    {
+                        <div class="card shadow mt-3">
+                            <div style="padding: 10px">
+                                <h4 class="font-weight-bold"><i class="fa fa-user"></i> CODE CỦA BẠN</h4>
+                                <table>
+                                    <tr>
+                                        <td width="20%">
+                                            <div style="padding: 10px">
+                                                <img src="~/Images/Users/@user.user_img" style="width: 100px; height: 100px" />
+                                            </div>
+                                        </td>
+                                        <td width="80%">
+                                            <h5 class="font-weight-bold text-danger">@user.user_name</h5>
+                                            <hr />
+                                            <b>Code miển phí: </b> @db.Codes.Where(n => n.user_id == user.user_id && n.code_coin == 0).Count() <br />
+                                            <b>Code có phí: </b> @db.Codes.Where(n => n.user_id == user.user_id && n.code_coin > 0).Count() <br />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="mt-4"></div>
+                    }
+                    <div class="card mt-3">
+                        <h4 class="card-header font-weight-bold"><i class="fa fa-code font-weight-bold"></i> CODE MỚI NHẤT</h4>
+                        <div class="card-body">
+                            @foreach (var item in codes.Where(n => n.code_id != Model.code_id).Where(n => n.code_active == 1).OrderByDescending(n => n.code_datecreate).Take(10))
+                            {
+                                <div class="row mb-4 mt-1">
+                                    <div class="col-lg-3">
+                                        <img src="~/Images/Codes/@item.code_img" height="65" width="73" />
+                                    </div>
+                                    <div class="col-lg-9">
+                                        <div class="ml-3">
+                                            <a href="@Url.Action("Details","Codes", new { id = item.code_id })" class="font-weight-bold fix-line-css">@item.code_title</a>
+                                            <div><i class="fa fa-bookmark text-warning"></i> @item.Category.category_name</div>
+                                            <div><i class="fa fa-calendar text-success"></i> @item.code_datecreate.Value.ToShortDateString()</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    #menu {
+        position: fixed;
+        right: 0;
+        top: 35%;
+        width: 10em;
+        margin-top: -3.5em;
+        z-index: 1000;
+    }
+</style>
+<div id="menu">
+    <div class="card" data-toggle="modal" data-target="#dg">
+        @{ 
+            var sum = db.Ratings.Where(n => n.code_id == Model.code_id).Sum(n => n.rating_sum);
+            var c = db.Ratings.Where(n => n.code_id == Model.code_id).Count();
+            var sc = sum / c;
+        }
+        <center>
+            <b class="text-danger">ĐÁNH GIÁ NGAY</b>
+            <br />
+            @if (sc == 5)
+            {
+                <b class="text-warning" style="font-size: 30px"><i class="fa fa-star"></i></b><br />
+                <b class="text-warning" style="font-size: 30px"><i class="fa fa-star"></i></b><br />
+                <b class="text-warning" style="font-size: 30px"><i class="fa fa-star"></i></b><br />
+                <b class="text-warning" style="font-size: 30px"><i class="fa fa-star"></i></b><br />
+                <b class="text-warning" style="font-size: 30px"><i class="fa fa-star"></i></b>
+            }
+            else if (sc == 4)
+            {
+                <b class="text-warning" style="font-size: 30px"><i class="fa fa-star"></i></b><br />
+                <b class="text-warning" style="font-size: 30px"><i class="fa fa-star"></i></b><br />
+                <b class="text-warning" style="font-size: 30px"><i class="fa fa-star"></i></b><br />
+                <b class="text-warning" style="font-size: 30px"><i class="fa fa-star"></i></b><br />
+                <b class="" style="font-size: 30px"><i class="fa fa-star"></i></b>
+            }
+            else if (sc == 3)
+            {
+                <b class="text-warning" style="font-size: 30px"><i class="fa fa-star"></i></b><br />
+                <b class="text-warning" style="font-size: 30px"><i class="fa fa-star"></i></b><br />
+                <b class="text-warning" style="font-size: 30px"><i class="fa fa-star"></i></b><br />
+                <b class="" style="font-size: 30px"><i class="fa fa-star"></i></b><br />
+                <b class="" style="font-size: 30px"><i class="fa fa-star"></i></b>
+            }
+            else if (sc == 2)
+            {
+                <b class="text-warning" style="font-size: 30px"><i class="fa fa-star"></i></b><br />
+                <b class="text-warning" style="font-size: 30px"><i class="fa fa-star"></i></b><br />
+                <b class="" style="font-size: 30px"><i class="fa fa-star"></i></b><br />
+                <b class="" style="font-size: 30px"><i class="fa fa-star"></i></b><br />
+                <b class="" style="font-size: 30px"><i class="fa fa-star"></i></b>
+            }
+            else
+            {
+                <b class="text-warning" style="font-size: 30px"><i class="fa fa-star"></i></b><br />
+                <b class="" style="font-size: 30px"><i class="fa fa-star"></i></b><br />
+                <b class="" style="font-size: 30px"><i class="fa fa-star"></i></b><br />
+                <b class="" style="font-size: 30px"><i class="fa fa-star"></i></b><br />
+                <b class="" style="font-size: 30px"><i class="fa fa-star"></i></b>
+            }
+            <br />
+            @if(sc == null)
+            {
+                <span>Chưa có</span>
+            }
+            else
+            {
+                <span>
+                    @sc/5 chất lượng
+                </span>
+            }
+        </center>
+    </div>
+</div>
+<div class="bg-white fixed-bottom border">
+    <div class="container">
+        <div class="row mt-3 mb-3">
+            <div class="col-lg-3">
+                <b class="text-dark"><i class="fa fa-code font-weight-bold"></i> TÊN CODE:</b> <br />
+                <b class="text-primary"> @Model.code_title</b>
+            </div>
+            <div class="col-lg-3">
+                <b class="text-dark"><i class="fa fa-th-list"></i> DANH MỤC: </b> <br />
+                <b class="text-warning">@Model.Category.category_name</b>
+            </div>
+            <div class="col-lg-3">
+                <b class="text-dark"><i class="fa fa-list"></i> THỂ LOẠI: </b>
+                <b class="text-success">
+                    <br />
+                    @foreach (var item in groups.Where(n => n.code_id == Model.code_id && n.group_item == Common.ITEM_LANGUAGE_CODE))
+                    {
+                        @item.Language.language_name<span>&nbsp;</span>
+                    }
+                </b>
+            </div>
+            <div class="col-lg-3">
+                <button class="btn btn-outline-danger w-100 font-weight-bold mt-3" onclick="">TẢI CODE NGAY</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var app = angular.module('myApp', []);
+    app.controller('myCtrl', function ($scope, $http) {
+        $http({
+            method: "GET",
+            url: "/Json/Codes"
+        }).then(function mySuccess(response) {
+            $scope.list = response.data;
+
+            $http({
+                method: "GET",
+                url: "/Codes/JsonFavourite?idcode=@Model.code_id"
+            }).then(function mySuccess(response) {
+                $scope.fa = response.data;
+                $scope.countfa = $scope.fa.length;
+
+                $scope.favourite = function (id) {
+                    $http({
+                        method: "GET",
+                        url: "/Codes/FavouriteCode?idcode=" + id
+                    }).then(function mySuccess(response) {
+                        $scope.fa = response.data;
+                        $scope.countfa = $scope.fa.length;
+
+                        $(document).ready(function () {
+                            $('#notesave').modal('show');
+                        })
+
+                    }, function myError(response) {
+                        $scope.fa = response.statusText;
+                    });
+                }
+
+                $scope.cancelfavourite = function (id) {
+                    $http({
+                        method: "GET",
+                        url: "/Codes/CancelFavourite?id=" + id
+                    }).then(function mySuccess(response) {
+                        $scope.fa = response.data;
+                        $scope.countfa = $scope.fa.length;
+
+                        $(document).ready(function () {
+                            $('#notecancel').modal('show');
+                        })
+
+                    }, function myError(response) {
+                        $scope.fa = response.statusText;
+                    });
+                }
+
+
+            }, function myError(response) {
+                $scope.fa = response.statusText;
+            });
+
+
+
+
+        }, function myError(response) {
+            $scope.list = response.statusText;
+        });
+    });
+
+    app.controller('myComment', function ($scope, $http) {
+        $http({
+            method: "GET",
+            url: "/Json/CommentID?id=@Model.code_id"
+        }).then(function mySuccess(response) {
+            $scope.com = response.data;
+            $scope.createcomment = function (id) {
+                var content = document.getElementsByName("content")[0].value;
+                $http({
+                    method: "GET",
+                    url: "/Codes/Comment?content=" + content
+                        + "&id=" + id
+                }).then(function mySuccess(response) {
+                    $scope.com = response.data;
+
+                    document.getElementsByName("content")[0].value = "";
+                    window.location.href = '#pay'
+
+
+                }, function myError(response) {
+                    $scope.com = response.statusText;
+                });
+            }
+        }, function myError(response) {
+            $scope.com = response.statusText;
+        });
+
+
+
+
+    });
+</script>
+@if (functions.Cookie() != null)
+{
+    <!-- Modal -->
+    <div class="modal fade" id="notesave" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title text-success font-weight-bold text-uppercase" id="exampleModalLabel"><i class="fa fa-check-circle text-success"></i> Lưu thành công</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body font-weight-bold text-dark">
+                    Bạn đã lưu code "@Model.code_title" thành công. Xem quản lý <a href="/Codes/MyFavouriteCode">tại đây!</a>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-dark font-weight-bold" data-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="notecancel" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title text-danger font-weight-bold text-uppercase" id="exampleModalLabel"><i class="fa fa-ban text-danger"></i> Hủy thành công</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body font-weight-bold text-dark">
+                    Bạn đã hủy code "@Model.code_title" thành công! <br />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-dark font-weight-bold" data-dismiss="modal">Đóng</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@if (coo.Cookie() != null)
+{
+    <link href="~/Content/Rating.css" rel="stylesheet" />
+    <!-- Modal -->
+    <div class="modal fade" id="dg" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="">
+                        <div class="">
+                            <div class="">
+                                <form class="rating-form" style="padding: 10px" method="post" action="@Url.Action("Rating","Codes")">
+                                    <input type="hidden" name="code_id" value="@Model.code_id" />
+                                    <b>Đánh giá mức độ</b>
+                                    <hr />
+                                    <label for="super-happy">
+                                        <input type="radio" name="rating_sum" checked class="super-happy" id="super-happy" value="5" />
+                                        <svg viewBox="0 0 24 24"><path d="M12,17.5C14.33,17.5 16.3,16.04 17.11,14H6.89C7.69,16.04 9.67,17.5 12,17.5M8.5,11A1.5,1.5 0 0,0 10,9.5A1.5,1.5 0 0,0 8.5,8A1.5,1.5 0 0,0 7,9.5A1.5,1.5 0 0,0 8.5,11M15.5,11A1.5,1.5 0 0,0 17,9.5A1.5,1.5 0 0,0 15.5,8A1.5,1.5 0 0,0 14,9.5A1.5,1.5 0 0,0 15.5,11M12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20M12,2C6.47,2 2,6.5 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z" /></svg>
+                                    </label>
+
+                                    <label for="happy">
+                                        <input type="radio" name="rating_sum" class="happy" id="happy" value="4" />
+                                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="100%" height="100%" viewBox="0 0 24 24"><path d="M20,12A8,8 0 0,0 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20A8,8 0 0,0 20,12M22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2A10,10 0 0,1 22,12M10,9.5C10,10.3 9.3,11 8.5,11C7.7,11 7,10.3 7,9.5C7,8.7 7.7,8 8.5,8C9.3,8 10,8.7 10,9.5M17,9.5C17,10.3 16.3,11 15.5,11C14.7,11 14,10.3 14,9.5C14,8.7 14.7,8 15.5,8C16.3,8 17,8.7 17,9.5M12,17.23C10.25,17.23 8.71,16.5 7.81,15.42L9.23,14C9.68,14.72 10.75,15.23 12,15.23C13.25,15.23 14.32,14.72 14.77,14L16.19,15.42C15.29,16.5 13.75,17.23 12,17.23Z" /></svg>
+                                    </label>
+
+                                    <label for="neutral">
+                                        <input type="radio" name="rating_sum" class="neutral" id="neutral" value="3" />
+                                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="100%" height="100%" viewBox="0 0 24 24"><path d="M8.5,11A1.5,1.5 0 0,1 7,9.5A1.5,1.5 0 0,1 8.5,8A1.5,1.5 0 0,1 10,9.5A1.5,1.5 0 0,1 8.5,11M15.5,11A1.5,1.5 0 0,1 14,9.5A1.5,1.5 0 0,1 15.5,8A1.5,1.5 0 0,1 17,9.5A1.5,1.5 0 0,1 15.5,11M12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22C6.47,22 2,17.5 2,12A10,10 0 0,1 12,2M9,14H15A1,1 0 0,1 16,15A1,1 0 0,1 15,16H9A1,1 0 0,1 8,15A1,1 0 0,1 9,14Z" /></svg>
+                                    </label>
+
+                                    <label for="sad">
+                                        <input type="radio" name="rating_sum" class="sad" id="sad" value="2" />
+                                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="100%" height="100%" viewBox="0 0 24 24"><path d="M20,12A8,8 0 0,0 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20A8,8 0 0,0 20,12M22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2A10,10 0 0,1 22,12M15.5,8C16.3,8 17,8.7 17,9.5C17,10.3 16.3,11 15.5,11C14.7,11 14,10.3 14,9.5C14,8.7 14.7,8 15.5,8M10,9.5C10,10.3 9.3,11 8.5,11C7.7,11 7,10.3 7,9.5C7,8.7 7.7,8 8.5,8C9.3,8 10,8.7 10,9.5M12,14C13.75,14 15.29,14.72 16.19,15.81L14.77,17.23C14.32,16.5 13.25,16 12,16C10.75,16 9.68,16.5 9.23,17.23L7.81,15.81C8.71,14.72 10.25,14 12,14Z" /></svg>
+                                    </label>
+
+                                    <label for="super-sad">
+                                        <input type="radio" name="rating_sum" class="super-sad" id="super-sad" value="1" />
+                                        <svg viewBox="0 0 24 24"><path d="M12,2C6.47,2 2,6.47 2,12C2,17.53 6.47,22 12,22A10,10 0 0,0 22,12C22,6.47 17.5,2 12,2M12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20M16.18,7.76L15.12,8.82L14.06,7.76L13,8.82L14.06,9.88L13,10.94L14.06,12L15.12,10.94L16.18,12L17.24,10.94L16.18,9.88L17.24,8.82L16.18,7.76M7.82,12L8.88,10.94L9.94,12L11,10.94L9.94,9.88L11,8.82L9.94,7.76L8.88,8.82L7.82,7.76L6.76,8.82L7.82,9.88L6.76,10.94L7.82,12M12,14C9.67,14 7.69,15.46 6.89,17.5H17.11C16.31,15.46 14.33,14 12,14Z" /></svg>
+                                    </label>
+                                    <br />
+                                    <input type="text" class="form-control" name="rating_content" value="" placeholder="Tại sao bạn yêu thích" />
+                                    <br />
+                                    <b>Code này có chất lượng</b>:
+                                    <div class="inline fields">
+                                        <div class="field">
+                                            <div class="ui radio checkbox">
+                                                <input type="radio" name="rating_cl" checked="" value="5" tabindex="0" class="hidden">
+                                                <label>Rất tốt</label>
+                                            </div>
+                                        </div>
+                                        <div class="field">
+                                            <div class="ui radio checkbox">
+                                                <input type="radio" name="rating_cl" tabindex="0" value="4" class="hidden">
+                                                <label>Tốt</label>
+                                            </div>
+                                        </div>
+                                        <div class="field">
+                                            <div class="ui radio checkbox">
+                                                <input type="radio" name="rating_cl" tabindex="0" value="3" class="hidden">
+                                                <label>Bình thường</label>
+                                            </div>
+                                        </div>
+                                        <div class="field">
+                                            <div class="ui radio checkbox">
+                                                <input type="radio" name="rating_cl" tabindex="0" value="2" class="hidden">
+                                                <label>Tệ</label>
+                                            </div>
+                                        </div>
+                                        <div class="field">
+                                            <div class="ui radio checkbox">
+                                                <input type="radio" name="rating_cl" tabindex="0" value="1" class="hidden">
+                                                <label>Qúa tệ</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br />
+                                    <b>Code này có demo rỏ ràng</b>:
+                                    <div class="inline fields">
+                                        <div class="field">
+                                            <div class="ui radio checkbox">
+                                                <input type="radio" name="rating_dmrr" checked="" value="5" tabindex="0" class="hidden">
+                                                <label>Rất tốt</label>
+                                            </div>
+                                        </div>
+                                        <div class="field">
+                                            <div class="ui radio checkbox">
+                                                <input type="radio" name="rating_dmrr" tabindex="0" value="4" class="hidden">
+                                                <label>Tốt</label>
+                                            </div>
+                                        </div>
+                                        <div class="field">
+                                            <div class="ui radio checkbox">
+                                                <input type="radio" name="rating_dmrr" tabindex="0" value="3" class="hidden">
+                                                <label>Bình thường</label>
+                                            </div>
+                                        </div>
+                                        <div class="field">
+                                            <div class="ui radio checkbox">
+                                                <input type="radio" name="rating_dmrr" tabindex="0" value="2" class="hidden">
+                                                <label>Tệ</label>
+                                            </div>
+                                        </div>
+                                        <div class="field">
+                                            <div class="ui radio checkbox">
+                                                <input type="radio" name="rating_dmrr" tabindex="0" value="1" class="hidden">
+                                                <label>Qúa tệ</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br />
+                                    <b>Code chạy được</b>:
+                                    <div class="inline fields">
+                                        <div class="field">
+                                            <div class="ui radio checkbox">
+                                                <input type="radio" name="rating_run" checked="" value="5" tabindex="0" class="hidden">
+                                                <label>Rất tốt</label>
+                                            </div>
+                                        </div>
+                                        <div class="field">
+                                            <div class="ui radio checkbox">
+                                                <input type="radio" name="rating_run" tabindex="0" value="4" class="hidden">
+                                                <label>Tốt</label>
+                                            </div>
+                                        </div>
+                                        <div class="field">
+                                            <div class="ui radio checkbox">
+                                                <input type="radio" name="rating_run" tabindex="0" value="3" class="hidden">
+                                                <label>Bình thường</label>
+                                            </div>
+                                        </div>
+                                        <div class="field">
+                                            <div class="ui radio checkbox">
+                                                <input type="radio" name="rating_run" tabindex="0" value="2" class="hidden">
+                                                <label>Tệ</label>
+                                            </div>
+                                        </div>
+                                        <div class="field">
+                                            <div class="ui radio checkbox">
+                                                <input type="radio" name="rating_run" tabindex="0" value="1" class="hidden">
+                                                <label>Qúa tệ</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <b>Bạn thấy như nào</b>:
+                                    <div class="inline fields">
+                                        <div class="field">
+                                            <div class="ui radio checkbox">
+                                                <input type="radio" name="rating_like" checked="" value="true" tabindex="0" class="hidden">
+                                                <label>Rất tốt</label>
+                                            </div>
+                                        </div>
+                                        <div class="field">
+                                            <div class="ui radio checkbox">
+                                                <input type="radio" name="rating_like" tabindex="0" value="false" class="hidden">
+                                                <label>Tốt</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button class="btn btn-danger" type="submit">Đánh giá</button>
+                                    <script>
+                                        $('.ui.radio.checkbox')
+                                            .checkbox()
+                                            ;
+                                    </script>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<script>
+    $(function () {
+            function ratingEnable() {
+                $('#example-square').barrating('show', {
+                    theme: 'bars-square',
+                    showValues: true,
+                    showSelectedRating: false
+                });
+
+            }
+
+            ratingEnable();
+
+        });
+</script>

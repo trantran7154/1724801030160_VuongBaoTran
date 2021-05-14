@@ -1,0 +1,219 @@
+﻿
+@{
+    ViewBag.Title = "Không hoạt động";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/Content/LayoutAdmin/css/switchIOS.css" rel="stylesheet" />
+
+<div class="col-xl-12 col-md-12" ng-app="myApp">
+    <div class="card table-card container-fluid" ng-controller="myCtrl">
+        <div class="card-header">
+            <h5>@ViewBag.Title</h5>
+            <div class="card-header-right">
+                <a href="/Admin/NewsAdmin/Index" class="font-weight-bold mr-4">
+                    <i class="fa fa-long-arrow-left text-primary"></i>TRỞ VỀ
+                </a>
+            </div>
+        </div>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-8">
+                    <h4 class="mt-3">TÌM KIẾM NÂNG CAO</h4>
+                    <table class="mb-5 mt-3">
+                        <tr class="three fields">
+                            <td class="field">
+                                <label class="font-weight-bold">Tìm kiếm: </label>
+                                <div class="ui icon input" style="width: 250px">
+                                    <input type="text" placeholder="VD: Tin tức công nghệ..." ng-model="searchText">
+                                    <i class="inverted circular search link icon"></i>
+                                </div>
+                            </td>
+                            <td class="field">
+                                <label class="ml-3 font-weight-bold">Tình trạng: </label>
+                                <select class="ui search dropdown" ng-model="searchFull.active">
+                                    <option value="">Tất cả</option>
+                                    <option value="1">Hoạt động</option>
+                                    <option value="2">Không hoạt động</option>
+                                </select>
+                            </td>
+                            <td class="field">
+                                <label class="ml-3 font-weight-bold">Sắp xếp theo: </label>
+                                <select class="ui dropdown" ng-model="searchSort">
+                                    <option value="searchText">Sắp xếp mặc định</option>
+                                    <option value="searchText">Mặc định</option>
+                                    <option value="name">Chữ cái</option>
+                                    <option value="datecreate">Cũ nhất</option>
+                                    <option value="searchText">Mới nhất</option>
+                                </select>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="card-block">
+            <div class="table-responsive container-fluid">
+                <table class="table table-bordered text-center">
+                    <tr>
+                        <th class="font-weight-bold">
+                            Ảnh
+                        </th>
+                        <th class="font-weight-bold">
+                            Tên Tin Tức
+                        </th>
+                        <th class="font-weight-bold">
+                            Lượt Xem
+                        </th>
+                        <th class="font-weight-bold">
+                            Tag
+                        </th>
+                        <th class="font-weight-bold">
+                            Người Đăng
+                        </th>
+                        <th class="font-weight-bold">
+                            Ngày Tạo
+                        </th>
+                        <th class="font-weight-bold" width="120">
+                            Hoạt Động
+                        </th>
+                        <th class="font-weight-bold">
+                            Tùy Chọn
+                        </th>
+                        <th class="font-weight-bold">
+                            Công Cụ
+                        </th>
+                    </tr>
+                    <tbody ng-show="(list | filter:searchText).length != 0">
+                        <tr ng-repeat="list in filteredTodos | filter: searchText | orderBy: searchSort | filter: searchCate">
+                            <td>
+                                <img src="~/Images/News/{{list.img}}" height="60" width="80" />
+                            </td>
+                            <td class="font-weight-bold">{{list.name}}</td>
+                            <td class="font-weight-bold">{{list.view}} lượt</td>
+                            <td class="font-weight-bold">{{list.tag}}</td>
+                            <td class="font-weight-bold">{{list.user_name}}</td>
+                            <td>{{list.datecreate}}</td>
+                            <td class="font-weight-bold">
+                                <div ng-show="list.active == 1">
+                                    <label ontouchstart="" class="ios-switch">
+                                        <input type="checkbox" ng-click="active(list.id)" id="checkbox" name="my-checkbox" checked>
+                                        <span>
+                                            <span class="ios-switch-inlay"></span>
+                                            <span class="ios-switch-knob"></span>
+                                        </span>
+                                    </label>
+                                </div>
+                                <div ng-show="list.active == 2">
+                                    <label ontouchstart="" class="ios-switch">
+                                        <input type="checkbox" ng-click="active(list.id)" id="checkbox" name="my-checkbox">
+                                        <span>
+                                            <span class="ios-switch-inlay"></span>
+                                            <span class="ios-switch-knob"></span>
+                                        </span>
+                                    </label>
+                                </div>
+                            </td>
+                            <td>
+                                <div ng-show="list.option == true">
+                                    <label ontouchstart="" class="ios-switch">
+                                        <input type="checkbox" ng-click="option(list.id)" id="checkbox" name="my-checkbox" checked>
+                                        <span>
+                                            <span class="ios-switch-inlay"></span>
+                                            <span class="ios-switch-knob"></span>
+                                        </span>
+                                    </label>
+                                </div>
+                                <div ng-show="list.option == false">
+                                    <label ontouchstart="" class="ios-switch">
+                                        <input type="checkbox" ng-click="option(list.id)" id="checkbox" name="my-checkbox">
+                                        <span>
+                                            <span class="ios-switch-inlay"></span>
+                                            <span class="ios-switch-knob"></span>
+                                        </span>
+                                    </label>
+                                </div>
+                            </td>
+                            <td width="110">
+                                <a ng-click="restore(list.id)"><i class="fa fa-refresh" style="font-size: 16px"></i></a>
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tbody ng-show="(list | filter:searchText).length == 0">
+                        <tr>
+                            <th colspan="9" class="text-center font-weight-bold"><i class="fa fa-ban" style="color: red"></i> CHƯA CÓ DỮ LIỆU</th>
+                        </tr>
+                    </tbody>
+                </table>
+                <!-- Success modal -->
+                <div class="modal" tabindex="-1" id="bin">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-body text-center font-18">
+                                <h3 class="mb-20">Khôi Phục Thành Công</h3>
+                                <div class="mb-30 text-center">
+                                    <img src="~/Images/Modal/checked.png" />
+                                </div>
+                                <h6 class="mt-2">Dữ liệu đã được cập nhật!</h6>
+                            </div>
+                            <div class="modal-footer justify-content-center">
+                                <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <center>
+                <!-- Page List -->
+                <pagination ng-model="currentPage" total-items="list.length" max-size="maxSize" boundary-links="true"></pagination>
+            </center>
+        </div>
+    </div>
+</div>
+
+<script>
+    var app = angular.module('myApp', ['ui.bootstrap']);
+    app.controller('myCtrl', function ($scope, $http) {
+        $http({
+            method: "GET",
+            url: "/Admin/NewsAdmin/ShowBin"
+        }).then(function mySuccess(response) {
+            //Giả định
+            $scope.filteredTodos = []
+                , $scope.currentPage = 1
+                , $scope.numPerPage = 10
+                , $scope.maxSize = 5;
+
+            //Xác định list phân trang
+            $scope.makeTodos = function () {
+                $scope.list = response.data;
+            }
+            $scope.makeTodos();
+
+            //Phân trang
+            $scope.$watch('currentPage + numPerPage', function () {
+                var begin = (($scope.currentPage - 1) * $scope.numPerPage)
+                    , end = begin + $scope.numPerPage;
+
+                $scope.filteredTodos = $scope.list.slice(begin, end);
+            });
+        }, function myError(response) {
+            $scope.list = response.statusText;
+        });
+        // Check
+        $scope.restore = function (id) {
+            $http.get(" /Admin/NewsAdmin/Restore?id=" + id)
+                .then(function (response) {
+                    $scope.list = response.data;
+                    $(document).ready(function () {
+                        $('#bin').modal('show');
+                    })
+                });
+        }
+        // Search
+        $scope.searchSort = "searchText";
+        $scope.searchSort = "name";
+        $scope.searchSort = "searchText";
+    });
+</script>
+

@@ -1,0 +1,81 @@
+﻿
+@{
+    ViewBag.Title = "Quản lý code đã bán";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="home" style=" height: 250px">
+    <div class="home_background parallax-window" data-parallax="scroll" style="background-image: url('../../Images/Codes/blue-dark-background-brightness-megaphone-set-windows-web-programming-language-codes-gears-vector-illustration-111990452.jpg');"></div>
+</div>
+<div class="testimonials" style="background-color: #f0f0f0; font-family: Roboto,Arial,sans-serif;padding-top: 22px;" ng-app="myApp">
+    <div class="test_border"></div>
+    <div class="container" style="max-width: 1300px" ng-controller="myCtrl">
+        <div class="row">
+            <div class="col-lg-8 bg-white border shadow text-dark">
+                <div style="padding: 10px; font-size: 16px">
+                    <h6 class="font-weight-bold text-success text-uppercase" style="color: black; font-size: 25px"><i class="fa fa-code font-weight-bold"></i> Quản lý code đã bán</h6>
+                    <p class="text-dark font-weight-bold float-left mt-3">
+                        <b>Có tổng cộng {{count}} code</b> <br />
+                        Có <span class="text-danger">{{(list | filter: txtSearch).length}}</span> code được tìm thấy
+                    </p>
+                    <div class="ui float-right mt-3">
+                        <div class="ui icon input">
+                            <input class="prompt" type="text" placeholder="Nhập bất kỳ từ khóa..." ng-model="txtSearch">
+                            <i class="search icon"></i>
+                        </div>
+                        <div class="results"></div>
+                    </div>
+                    <br />
+                    <br />
+                    <br />
+                    <table class="table table-bordered">
+                        <tr class="bg-dark text-white text-capitalize text-center font-weight-bold">
+                            <td width="100">Mã code</td>
+                            <td width="100">Ảnh</td>
+                            <td>Tiêu đề</td>
+                            <td>Người mua</td>
+                            <td width="80">Số xu</td>
+                            <td>Số tiền</td>
+                            <td>Ngày chat</td>
+                            <td width="100">Tùy chọn</td>
+                        </tr>
+                        <tr ng-show="(list | filter: txtSearch).length == 0">
+                            <th colspan="9" class="text-center font-weight-bold"><i class="fa fa-ban" style="color: red"></i> CHƯA CÓ DỮ LIỆU</th>
+                        </tr>
+                        <tr ng-repeat="list in list | filter: txtSearch" class="text-center">
+                            <td>CODE-{{list.id}}</td>
+                            <td><img src="~/Images/Codes/{{list.img}}" style="width: 50px; height: 50px" /></td>
+                            <td>{{list.title}}</td>
+                            <td>{{list.buy}}</td>
+                            <td ng-show="list.coin != 0">{{list.coin}} Xu</td>
+                            <td ng-show="list.coin == 0" class="font-weight-bold">MIỄN PHÍ</td>
+                            <td>{{list.coin * 1000 | currency:"":0}} VNĐ</td>
+                            <td>{{list.date}}</td>
+                            <td>
+                                <a class="text-primary" href="/Codes/Details?id={{list.id}}" target="_blank"><i class="fa fa-eye"></i></a> |
+                                <i class="fa fa-trash text-danger"></i>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="col-lg-4 bg-white border shadow">
+                @Html.Action("All", "View")
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var app = angular.module('myApp', []);
+    app.controller('myCtrl', function ($scope, $http) {
+        $http({
+            method: "GET",
+            url: "/Json/CodesSell"
+        }).then(function mySuccess(response) {
+            $scope.list = response.data;
+            $scope.count = $scope.list.length;
+        }, function myError(response) {
+            $scope.list = response.statusText;
+        });
+    });
+</script>
+

@@ -1,0 +1,107 @@
+﻿@using CodeShare.Model.EF
+@model CodeShare.Model.EF.User
+
+@{
+    ViewBag.Title = "Sửa thông tin người dùng";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+
+    DataShareCodeEntities db = new DataShareCodeEntities();
+}
+
+<div class="col-xl-12 col-md-12">
+    <div class="card table-card">
+        <div class="card-header">
+            <h5>@ViewBag.Title</h5>
+            <div class="card-header-right">
+                <a href="/Admin/UsersAdmin/Index" class="font-weight-bold mr-4">
+                    <i class="fa fa-long-arrow-left text-primary"></i>TRỞ VỀ
+                </a>
+            </div>
+        </div>
+        <div class="card-block">
+            <div class="table-responsive container-fluid">
+                <form method="post" class="ui form" action="@Url.Action("Edit","UsersAdmin",new { id = Model.user_id })" enctype="multipart/form-data">
+                    @Html.AntiForgeryToken()
+
+                    <input type="hidden" value="@Model.user_id" name="user_id" />
+                    <input type="hidden" value="@Model.user_img" name="user_img" />
+                    <input type="hidden" value="@Model.user_datecreate" name="user_datecreate" />
+                    <input type="hidden" value="@Model.user_active" name="user_active" />
+                    <input type="hidden" value="@Model.user_view" name="user_view" />
+                    <input type="hidden" value="@Model.user_token" name="user_token" />
+                    <input type="hidden" value="@Model.user_coin" name="user_coin" />
+
+                    <div class="modal-body">
+                        <div class="ui form">
+                            <div class="two fields">
+                                <div class="field">
+                                    <label><i class="fa fa-user"></i> Tên người dùng</label>
+                                    <input type="text" value="@Model.user_name" name="user_name" />
+                                </div>
+                                <div class="field">
+                                    <label><i class="fa fa-key"></i> Vai trò</label>
+                                    <select class="ui fluid dropdown" name="user_role">
+                                        <option value="1" @(Model.user_role == 2 ? "selected" : "")>Admin</option>
+                                        <option value="2" @(Model.user_role == 1 ? "selected" : "")>Người dùng</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="two fields">
+                                <div class="field">
+                                    <label><i class="fa fa-envelope"></i> Email</label>
+                                    <input type="text" value="@Model.user_email" name="user_email" />
+                                </div>
+                                <div class="field">
+                                    <label><i class="key icon"></i> Mật khẩu</label>
+                                    <input type="text" value="@Model.user_pass" name="user_pass" />
+                                </div>
+                            </div>
+                            <div class="two fields">
+                                <div class="field">
+                                    <label><i class="fa fa-image"></i> Ảnh đại diện</label>
+                                    <input type="file" value="@Model.user_img" name="img" />
+                                </div>
+                                <div class="field">
+                                    <label><i class="fa fa-phone"></i> Số điện thoại</label>
+                                    <input type="text" value="@Model.user_phone" name="user_phone" />
+                                </div>
+                            </div>
+                            <div class="two fields">
+                                <div class="field">
+                                    <label><i class="fa fa-venus-mars font-weight-bold"></i> Giới tính</label>
+                                    <select class="ui fluid dropdown" name="user_sex">
+                                        <option value="true" @(Model.user_sex == true ? "selected" : "")>Nam</option>
+                                        <option value="false" @(Model.user_sex == false ? "selected" : "")>Nữ</option>
+                                    </select>
+                                </div>
+                                <div class="field">
+                                    <label><i class="fa fa-calendar"></i> Ngày sinh</label>
+                                    <input type="date" value="@Model.user_birth" name="user_birth" />
+                                </div>
+                            </div>
+                            <div class="two fields">
+                                <div class="field">
+                                    <label><i class="fa fa-code font-weight-bold"></i> Code</label>
+                                    <input type="text" value="@Model.user_code" name="user_code" />
+                                </div>
+                                <div class="field">
+                                    <label><i class="fa fa-heart-o font-weight-bold"></i> Sở thích</label>
+                                    <input type="text" value="@Model.user_fa" name="user_fa" />
+                                </div>
+                            </div>
+                            <div class="ui error message"></div>
+                        </div>
+                    </div>
+                    <div class="actions modal-footer">
+                        <button type="submit" class="ui positive right labeled icon button">
+                            Sửa
+                            <i class="checkmark icon"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
